@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: lugeasy
+
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+    defer-datasource-initialization: true
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: DEBUG
+    com.example.buddy_chat: DEBUG
+
+
