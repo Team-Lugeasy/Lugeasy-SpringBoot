@@ -1,0 +1,3 @@
+[submodule "lugeasy/config"]
+	path = lugeasy/config
+	url = https://github.com/Team-Lugeasy/Lugeasy-SpringBoot-Config.git
