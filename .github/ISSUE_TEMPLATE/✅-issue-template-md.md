@@ -1,7 +1,7 @@
 ---
 name: "✅-issue-template.md"
 about: 기본 Issue Template
-title: "[LAVEL] Title"
+title: "[LABEL] Title"
 labels: ''
 assignees: ''
 
