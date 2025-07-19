@@ -1,18 +1,19 @@
 version: '3.8'
 
 services:
-  maria:
+  mariadb:
     container_name: mariadb-lugeasy-local
     image: mariadb:latest
     ports:
-      - ${MARIA_OUTER_PORT}:${MARIA_INNER_PORT}
+      - ${MARIADB_OUTER_PORT}:${MARIADB_INNER_PORT}
     environment:
-      - MARIA_DB=${MARIA_DB}
-      - MARIA_USER=${MARIA_USER}
-      - MARIA_PASSWORD=${MARIA_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     networks:
       lugeasy_network:
-        ipv4_address: ${NETWORK_MARIA_IP}
+        ipv4_address: ${NETWORK_MARIADB_IP}
   redis:
     container_name: redis-lugeasy-local
     image: redis:latest
