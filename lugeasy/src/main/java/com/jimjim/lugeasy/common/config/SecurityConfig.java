@@ -1,4 +1,4 @@
-package com.jimjim.lugeasy.config;
+package com.jimjim.lugeasy.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
