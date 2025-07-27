@@ -38,9 +38,6 @@ jobs:
       with:
         token: ${{secrets.LUGEASY_ACTIONS_TOKEN}}
         submodules: true
-
-    - name : Grant execute permission for gradlew
-      run: chmod +x gradlew 
     
     # 서브 모듈 변경 사항 update
     - name: Git Submodule Update
