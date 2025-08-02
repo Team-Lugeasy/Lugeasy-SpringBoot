@@ -1,4 +1,4 @@
-package com.jimjim.lugeasy.common.jwt.dto;
+package com.jimjim.lugeasy.common.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
