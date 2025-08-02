@@ -85,10 +85,8 @@ public class AuthenticationFacade {
     }
 
     public AuthenticationResponse.AuthResign resign(@AuthenticationMember Member member) {
-        Member resignMember = memberService.findMember(member.getId());
-
-        memberService.resignMember(resignMember);
-        return authenticationMapper.toAuthResign(resignMember);
+        memberService.resignMember(member);
+        return authenticationMapper.toAuthResign(member);
     }
 
     public AuthenticationResponse.AuthRenewAccessToken refreshAccessToken(AuthenticationRequest.AuthRefreshAccessToken request) {
