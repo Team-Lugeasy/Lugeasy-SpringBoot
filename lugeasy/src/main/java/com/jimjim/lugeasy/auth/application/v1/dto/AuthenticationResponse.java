@@ -22,16 +22,6 @@ public class AuthenticationResponse {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class AuthRefreshAllTokens {
-        private Long memberId;
-        private String accessToken;
-        private String refreshToken;
-    }
-
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class AuthResign {
         private Long memberId;
     }
