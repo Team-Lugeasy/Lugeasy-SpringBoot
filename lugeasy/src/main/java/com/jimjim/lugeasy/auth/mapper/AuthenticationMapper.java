@@ -14,7 +14,7 @@ public class AuthenticationMapper {
                 .isMembered(isMembered)
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
-                .nickname(isMembered ? member.getName() : null)
+                .name(isMembered ? member.getName() : null)
                 .build();
     }
 

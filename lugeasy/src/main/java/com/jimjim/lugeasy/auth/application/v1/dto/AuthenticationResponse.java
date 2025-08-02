@@ -15,7 +15,7 @@ public class AuthenticationResponse {
         private String accessToken;
         private String refreshToken;
         private Boolean isMembered;
-        private String nickname;
+        private String name;
     }
 
     @Getter
@@ -29,6 +29,8 @@ public class AuthenticationResponse {
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class AuthRenewAccessToken {
         private Long memberId;
         private String accessToken;

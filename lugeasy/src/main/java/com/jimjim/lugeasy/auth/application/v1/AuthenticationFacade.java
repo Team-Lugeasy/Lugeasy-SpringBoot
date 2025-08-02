@@ -51,7 +51,7 @@ public class AuthenticationFacade {
      *         String accessToken;
      *         String refreshToken;
      *         Boolean isMembered;
-     *         String nickname;
+     *         String name;
      *     }
      */
     @Transactional
