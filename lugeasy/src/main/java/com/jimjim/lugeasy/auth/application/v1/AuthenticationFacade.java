@@ -57,6 +57,9 @@ public class AuthenticationFacade {
     @Transactional
     public AuthenticationResponse.AuthSignIn signIn(SocialType socialType, AuthenticationRequest.AuthSignIn request) {
         String clientId = request.getEncryptedUserIdentifier();
+        if (clientId == null || clientId.trim().isEmpty()) {
+            throw new RestApiException(AuthErrorCode.INVALID_REQUEST);
+        }
         Optional<Member> optionalMember = memberRepository.findByClientId(clientId);
 
         // 해당 유저가 존재하지 않으면, Member 객체 생성하고 DB에 저장 -> 회원가입

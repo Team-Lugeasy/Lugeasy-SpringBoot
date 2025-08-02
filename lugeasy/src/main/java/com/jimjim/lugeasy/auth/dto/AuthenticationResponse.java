@@ -39,6 +39,8 @@ public class AuthenticationResponse {
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class AuthRenewAccessToken {
         private Long memberId;
         private String accessToken;
