@@ -25,6 +25,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String clientId;
+
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -33,7 +36,12 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SocialType socialType;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PermissionRole permissionRole;
 
     @Column(nullable = false)
     private String socialId;
