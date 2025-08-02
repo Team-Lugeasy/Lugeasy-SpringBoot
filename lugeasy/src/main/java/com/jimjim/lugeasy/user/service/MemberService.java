@@ -1,13 +1,16 @@
 package com.jimjim.lugeasy.user.service;
 
 import com.jimjim.lugeasy.user.domain.Member;
-import com.jimjim.lugeasy.user.domain.SocialType;
 
 public interface MemberService {
     
-    Member saveNewMember(String clientId, SocialType socialType);
+    /**
+     * 회원 정보를 업데이트합니다
+     */
+    Member updateMember(Member member);
     
-    Member findMember(Long memberId);
-    
-    void resignMember(Member member);
+    /**
+     * 회원 정보를 조회합니다
+     */
+    Member getMemberInfo(Long memberId);
 } 

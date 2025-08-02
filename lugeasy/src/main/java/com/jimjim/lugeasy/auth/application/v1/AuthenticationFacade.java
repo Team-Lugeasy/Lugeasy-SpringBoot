@@ -5,11 +5,10 @@ import com.jimjim.lugeasy.auth.application.v1.dto.AuthenticationResponse;
 import com.jimjim.lugeasy.auth.domain.JwtToken;
 import com.jimjim.lugeasy.auth.infrastructure.JwtTokenRepository;
 import com.jimjim.lugeasy.auth.mapper.AuthenticationMapper;
-import com.jimjim.lugeasy.common.security.AuthenticationMember;
+import com.jimjim.lugeasy.auth.service.AuthenticationService;
 import com.jimjim.lugeasy.user.domain.Member;
 import com.jimjim.lugeasy.user.domain.SocialType;
 import com.jimjim.lugeasy.user.infrastructure.MemberRepository;
-import com.jimjim.lugeasy.user.service.MemberService;
 import com.jimjim.lugeasy.common.security.jwt.service.JwtService;
 import com.jimjim.lugeasy.common.error.RestApiException;
 import com.jimjim.lugeasy.auth.errorCode.AuthErrorCode;
@@ -30,10 +29,10 @@ public class AuthenticationFacade {
 
     // Authentication
     private final AuthenticationMapper authenticationMapper;
+    private final AuthenticationService authenticationService;
 
     // Member
     private final MemberRepository memberRepository;
-    private final MemberService memberService;
 
     /**
      * 로그인/회원가입 로직입니다.
@@ -51,7 +50,7 @@ public class AuthenticationFacade {
      *         String accessToken;
      *         String refreshToken;
      *         Boolean isMembered;
-     *         String name;
+     *         String nickname;
      *     }
      */
     @Transactional
@@ -65,7 +64,7 @@ public class AuthenticationFacade {
         // 해당 유저가 존재하지 않으면, Member 객체 생성하고 DB에 저장 -> 회원가입
         if (optionalMember.isEmpty()) {
             // 새로운 유저를 만들고 디비에 저장 & JWT Token 생성
-            Member newMember = memberService.saveNewMember(clientId, socialType);
+            Member newMember = authenticationService.createNewMember(clientId, socialType);
             JwtToken newJwtToken = jwtService.issueJwtToken(newMember);
             return authenticationMapper.toAuthSignIn(newMember, newJwtToken, false);
         }
@@ -84,9 +83,11 @@ public class AuthenticationFacade {
         return authenticationMapper.toAuthSignIn(member, jwtToken, true);
     }
 
-    public AuthenticationResponse.AuthResign resign(@AuthenticationMember Member member) {
-        memberService.resignMember(member);
-        return authenticationMapper.toAuthResign(member);
+    public AuthenticationResponse.AuthResign resign(Member member) {
+        Member resignMember = authenticationService.findMember(member.getId());
+
+        authenticationService.deleteMember(resignMember);
+        return authenticationMapper.toAuthResign(resignMember);
     }
 
     public AuthenticationResponse.AuthRenewAccessToken refreshAccessToken(AuthenticationRequest.AuthRefreshAccessToken request) {
