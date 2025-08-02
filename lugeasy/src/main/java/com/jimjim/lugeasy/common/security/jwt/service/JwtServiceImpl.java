@@ -112,7 +112,7 @@ public class JwtServiceImpl implements JwtService {
                 .claim("permissionRole", permissionRole)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredTime)) // 유효 기간 (14일)
-                .signWith(SignatureAlgorithm.HS256, secretKey) //HS256알고리즘으로 key를 암호화
+                .signWith(SignatureAlgorithm.HS512, secretKey) //HS512알고리즘으로 key를 암호화
                 .compact();
     }
 
