@@ -5,6 +5,7 @@ import com.jimjim.lugeasy.auth.application.v1.dto.AuthenticationResponse;
 import com.jimjim.lugeasy.auth.domain.JwtToken;
 import com.jimjim.lugeasy.auth.infrastructure.JwtTokenRepository;
 import com.jimjim.lugeasy.auth.mapper.AuthenticationMapper;
+import com.jimjim.lugeasy.common.security.AuthenticationMember;
 import com.jimjim.lugeasy.user.domain.Member;
 import com.jimjim.lugeasy.user.domain.SocialType;
 import com.jimjim.lugeasy.user.infrastructure.MemberRepository;
@@ -80,7 +81,7 @@ public class AuthenticationFacade {
         return authenticationMapper.toAuthSignIn(member, jwtToken, true);
     }
 
-    public AuthenticationResponse.AuthResign resign(Member member) {
+    public AuthenticationResponse.AuthResign resign(@AuthenticationMember Member member) {
         Member resignMember = memberService.findMember(member.getId());
 
         memberService.resignMember(resignMember);
