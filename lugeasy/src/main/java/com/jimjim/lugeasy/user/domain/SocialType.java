@@ -1,5 +1,16 @@
 package com.jimjim.lugeasy.user.domain;
 
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum SocialType {
-    GOOGLE, APPLE, KAKAO
+    KAKAO("카카오"),
+    GOOGLE("구글"),
+    NAVER("네이버"),
+    APPLE("애플");
+
+    private final String toKorean;
 }
