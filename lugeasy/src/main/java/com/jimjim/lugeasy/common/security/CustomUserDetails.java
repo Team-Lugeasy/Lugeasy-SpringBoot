@@ -15,7 +15,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(Member member) {
         this.member = member;
     }
-    @Bean
+
     public final Member getMember() {
         return member;
     }

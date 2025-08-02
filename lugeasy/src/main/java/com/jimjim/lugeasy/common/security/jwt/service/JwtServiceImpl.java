@@ -38,6 +38,10 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public JwtToken issueJwtToken(Member member) {
+
+       if (member.getClientId() == null || member.getPermissionRole() == null) {
+             throw new RestApiException(AuthErrorCode.INVALID_MEMBER_DATA);
+       }
         String accessToken = issueAccessToken(member.getId(), member.getClientId(), member.getPermissionRole());
         String refreshToken = issueRefreshToken(member.getId(), member.getClientId(), member.getPermissionRole());
         // 기존 토큰이 존재한다면 삭제 후 저장
