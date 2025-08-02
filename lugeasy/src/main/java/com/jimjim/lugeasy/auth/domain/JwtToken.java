@@ -19,6 +19,9 @@ public class JwtToken {
     private String accessToken;
 
     public void updateAccessToken(String newAccessToken) {
+        if (newAccessToken == null || newAccessToken.trim().isEmpty()) {
+            throw new IllegalArgumentException("Access token cannot be null or empty");
+        }
         this.accessToken = newAccessToken;
     }
 }
