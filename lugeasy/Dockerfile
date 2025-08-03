@@ -1,4 +1,5 @@
-FROM eclipse-temurin:21-jdk
+#FROM eclipse-temurin:21-jdk
+FROM openjdk:21-jdk
 
 # 환경변수 기본값
 ENV SPRING_PROFILE=dev
