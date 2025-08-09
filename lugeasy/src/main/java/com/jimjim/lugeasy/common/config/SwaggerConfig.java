@@ -34,7 +34,7 @@ public class SwaggerConfig {
 
         List<Server> servers = List.of(
                 new Server().url("http://localhost:8080").description("Local development server"),
-                new Server().url("https://lugeasy.com").description("Develop server")
+                new Server().url("https://api.lugeasy.com").description("Develop server")
         );
 
         return new OpenAPI()
