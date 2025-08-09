@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/static/js/**","/static/css/**","/static/img/**"
                                 ,"/swagger-ui/**","/api-docs/**", "api/authenticate", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/env", "/health-check", "/base-response", "/error-handler").permitAll()
+                        .requestMatchers("/tests").permitAll()
                         .requestMatchers("/auths/sign-in").permitAll()
                         .requestMatchers("/auths/refresh/accessToken").permitAll()
                         .requestMatchers("/auths/resign").authenticated()
