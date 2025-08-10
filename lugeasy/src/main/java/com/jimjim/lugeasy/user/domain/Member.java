@@ -46,6 +46,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String socialId;
 
-
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Host host;
 
 }
