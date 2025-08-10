@@ -2,6 +2,7 @@ package com.jimjim.lugeasy.user.service.impl;
 
 import com.jimjim.lugeasy.review.infrastructure.ReviewRepository;
 import com.jimjim.lugeasy.user.application.v1.dto.HostListResponseDTO;
+import com.jimjim.lugeasy.user.application.v1.dto.HostDetailResponseDTO;
 import com.jimjim.lugeasy.user.domain.Host;
 import com.jimjim.lugeasy.user.infrastructure.HostRepository;
 import com.jimjim.lugeasy.user.service.HostService;
@@ -39,6 +40,27 @@ public class HostServiceImpl implements HostService {
         
         return HostListResponseDTO.builder()
                 .name(host.getMember().getName())
+                .averageRating(averageRating != null ? averageRating : 0.0)
+                .reviewCount(reviewCount != null ? reviewCount : 0L)
+                .address(host.getAddress())
+                .build();
+    }
+    
+    @Override
+    public HostDetailResponseDTO getHostDetail(Long hostId) {
+        // 호스트와 멤버 정보를 함께 조회
+        Host host = hostRepository.findByIdWithMember(hostId)
+                .orElseThrow(() -> new RuntimeException("호스트를 찾을 수 없습니다. ID: " + hostId));
+        
+        // 호스트의 평균 평점 조회
+        Double averageRating = reviewRepository.getAverageRatingByHostId(hostId);
+        
+        // 호스트의 리뷰 개수 조회
+        Long reviewCount = reviewRepository.getReviewCountByHostId(hostId);
+        
+        return HostDetailResponseDTO.builder()
+                .name(host.getMember().getName())
+                .introduce(host.getIntroduce())
                 .averageRating(averageRating != null ? averageRating : 0.0)
                 .reviewCount(reviewCount != null ? reviewCount : 0L)
                 .address(host.getAddress())

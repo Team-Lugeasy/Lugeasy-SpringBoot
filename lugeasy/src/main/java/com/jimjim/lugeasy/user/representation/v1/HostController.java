@@ -2,11 +2,13 @@ package com.jimjim.lugeasy.user.representation.v1;
 
 import com.jimjim.lugeasy.common.response.BaseResponse;
 import com.jimjim.lugeasy.user.application.v1.dto.HostListResponseDTO;
+import com.jimjim.lugeasy.user.application.v1.dto.HostDetailResponseDTO;
 import com.jimjim.lugeasy.user.service.HostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,5 +27,12 @@ public class HostController {
     public BaseResponse<List<HostListResponseDTO>> getAuthenticatedHostList() {
         List<HostListResponseDTO> hostList = hostService.getAuthenticatedHostList();
         return BaseResponse.onSuccess(hostList);
+    }
+    
+    @Operation(summary = "호스트 상세정보 조회", description = "특정 호스트의 상세정보를 조회합니다.")
+    @GetMapping("/{hostId}")
+    public BaseResponse<HostDetailResponseDTO> getHostDetail(@PathVariable Long hostId) {
+        HostDetailResponseDTO hostDetail = hostService.getHostDetail(hostId);
+        return BaseResponse.onSuccess(hostDetail);
     }
 }
