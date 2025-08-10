@@ -99,3 +99,10 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/java,macos
+
+# Application configuration files (use config directory instead)
+src/main/resources/application*.yml
+src/main/resources/application*.yaml
+src/main/resources/application*.properties
+
+../.idea/workspace.xml

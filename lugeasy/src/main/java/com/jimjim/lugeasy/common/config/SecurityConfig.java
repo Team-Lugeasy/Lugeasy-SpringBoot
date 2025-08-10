@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/auths/sign-in").permitAll()
                         .requestMatchers("/auths/refresh/accessToken").permitAll()
                         .requestMatchers("/auths/resign").authenticated()
+                        .requestMatchers("/api/v1/hosts/**").authenticated()
                         .anyRequest().denyAll());
         http
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);

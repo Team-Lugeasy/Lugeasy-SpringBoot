@@ -60,10 +60,12 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-processResources.dependsOn('copyGitSubmodule')
 
-tasks.register('copyGitSubmodule', Copy) {
-	from './config'    // 실제 서브모듈 경로
-	include '*.yml'
-	into 'src/main/resources'
+// config 디렉토리의 설정 파일을 classpath에서 접근할 수 있도록 설정
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources', 'config']
+        }
+    }
 }
