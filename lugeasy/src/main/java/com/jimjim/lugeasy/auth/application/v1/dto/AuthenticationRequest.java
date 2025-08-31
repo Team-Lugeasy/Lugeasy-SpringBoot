@@ -1,5 +1,6 @@
 package com.jimjim.lugeasy.auth.application.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,9 @@ public class AuthenticationRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "로그인 요청 DTO")
     public static class AuthSignIn {
-        @Schema(description = "암호화된 사용자 식별자", defaultValue = "encryptedUserId123")
+        @Schema(description = "암호화된 사용자 식별자", example = "test_user_123", required = true)
         @NotBlank(message = "암호화된 사용자 식별자는 필수입니다")
         private String encryptedUserIdentifier;
     }

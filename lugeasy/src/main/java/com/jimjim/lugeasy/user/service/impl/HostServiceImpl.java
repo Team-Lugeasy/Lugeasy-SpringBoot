@@ -6,7 +6,9 @@ import com.jimjim.lugeasy.user.application.v1.dto.HostDetailResponseDTO;
 import com.jimjim.lugeasy.user.application.v1.dto.HostAvailabilityResponseDTO;
 import com.jimjim.lugeasy.user.domain.Host;
 import com.jimjim.lugeasy.user.domain.HostTime;
+import com.jimjim.lugeasy.user.domain.Member;
 import com.jimjim.lugeasy.user.infrastructure.HostRepository;
+import com.jimjim.lugeasy.user.infrastructure.MemberRepository;
 import com.jimjim.lugeasy.user.service.HostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class HostServiceImpl implements HostService {
 
     private final HostRepository hostRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<HostListResponseDTO> getAuthenticatedHostList() {
@@ -109,5 +112,17 @@ public class HostServiceImpl implements HostService {
         return HostAvailabilityResponseDTO.builder()
                 .availability(availabilityMap)
                 .build();
+    }
+    
+    @Override
+    public Host getHostById(Long hostId) {
+        return hostRepository.findByIdWithMember(hostId)
+                .orElseThrow(() -> new RuntimeException("호스트를 찾을 수 없습니다. ID: " + hostId));
+    }
+    
+    @Override
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다. ID: " + memberId));
     }
 }
