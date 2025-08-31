@@ -13,8 +13,9 @@ public class AuthenticationRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "로그인 요청 DTO")
     public static class AuthSignIn {
-        @Schema(description = "암호화된 사용자 식별자", defaultValue = "encryptedUserId123")
+        @Schema(description = "암호화된 사용자 식별자", example = "encryptedUserId123", required = true)
         @NotBlank(message = "암호화된 사용자 식별자는 필수입니다")
         private String encryptedUserIdentifier;
     }
