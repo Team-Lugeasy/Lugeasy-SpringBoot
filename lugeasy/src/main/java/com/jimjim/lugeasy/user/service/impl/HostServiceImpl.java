@@ -48,6 +48,7 @@ public class HostServiceImpl implements HostService {
         Long reviewCount = reviewRepository.getReviewCountByHostId(host.getId());
         
         return HostListResponseDTO.builder()
+                .id(host.getId())
                 .name(host.getMember().getName())
                 .averageRating(averageRating != null ? averageRating : 0.0)
                 .reviewCount(reviewCount != null ? reviewCount : 0L)
@@ -68,6 +69,7 @@ public class HostServiceImpl implements HostService {
         Long reviewCount = reviewRepository.getReviewCountByHostId(hostId);
         
         return HostDetailResponseDTO.builder()
+                .id(host.getId())
                 .name(host.getMember().getName())
                 .introduce(host.getIntroduce())
                 .averageRating(averageRating != null ? averageRating : 0.0)

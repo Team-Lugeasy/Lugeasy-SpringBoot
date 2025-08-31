@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HostListResponseDTO {
+    private Long id;               // 호스트 id
     private String name;           // Member.name
     private Double averageRating;  // 리뷰 rating의 평균값
     private Long reviewCount;      // 리뷰 개수
