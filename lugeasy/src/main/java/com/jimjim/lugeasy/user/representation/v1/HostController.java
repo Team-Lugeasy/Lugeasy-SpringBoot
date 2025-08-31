@@ -6,6 +6,7 @@ import com.jimjim.lugeasy.user.application.v1.dto.HostDetailResponseDTO;
 import com.jimjim.lugeasy.user.application.v1.dto.HostAvailabilityResponseDTO;
 import com.jimjim.lugeasy.user.service.HostService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,9 +44,9 @@ public class HostController {
     @Operation(summary = "호스트 예약 가능 날짜 및 시간 조회", description = "특정 호스트의 지정된 기간 내 예약 가능한 날짜와 시간대를 조회합니다.")
     @GetMapping("/{hostId}/availability")
     public BaseResponse<HostAvailabilityResponseDTO> getHostAvailability(
-            @PathVariable Long hostId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @Parameter(description = "호스트 ID", example = "1") @PathVariable Long hostId,
+            @Parameter(description = "조회 시작 날짜 (YYYY-MM-DD 형식)", example = "2024-01-01") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "조회 종료 날짜 (YYYY-MM-DD 형식)", example = "2024-12-31") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         HostAvailabilityResponseDTO availability = hostService.getHostAvailability(hostId, startDate, endDate);
         return BaseResponse.onSuccess(availability);
