@@ -1,5 +1,6 @@
 package com.jimjim.lugeasy.match.domain;
 
+import com.jimjim.lugeasy.common.entity.BaseEntity;
 import com.jimjim.lugeasy.user.domain.Host;
 import com.jimjim.lugeasy.user.domain.Member;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Matching {
+public class Matching extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

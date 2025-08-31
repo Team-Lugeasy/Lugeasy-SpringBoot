@@ -36,4 +36,11 @@ public interface HostService {
      * @return 호스트 엔티티
      */
     com.jimjim.lugeasy.user.domain.Host getHostById(Long hostId);
+    
+    /**
+     * 회원 ID로 회원 엔티티를 조회합니다.
+     * @param memberId 회원 ID
+     * @return 회원 엔티티
+     */
+    com.jimjim.lugeasy.user.domain.Member getMemberById(Long memberId);
 }
