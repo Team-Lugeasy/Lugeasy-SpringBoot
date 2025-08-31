@@ -28,6 +28,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email("temp@example.com") // 임시 이메일
                 .socialId(clientId) // clientId를 socialId로 사용
                 .permissionRole(PermissionRole.ROLE_CLIENT) // 기본 권한
+                .isHost(false)
+                .phoneNumber("")
+                .profileImageUrl("")
                 .build();
         return memberRepository.save(member);
     }
