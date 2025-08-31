@@ -110,4 +110,10 @@ public class HostServiceImpl implements HostService {
                 .availability(availabilityMap)
                 .build();
     }
+    
+    @Override
+    public Host getHostById(Long hostId) {
+        return hostRepository.findByIdWithMember(hostId)
+                .orElseThrow(() -> new RuntimeException("호스트를 찾을 수 없습니다. ID: " + hostId));
+    }
 }

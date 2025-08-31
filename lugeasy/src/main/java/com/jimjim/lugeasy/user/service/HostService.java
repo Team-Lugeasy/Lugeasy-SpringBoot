@@ -29,4 +29,11 @@ public interface HostService {
      * @return 날짜별 사용 가능한 시간대 맵
      */
     HostAvailabilityResponseDTO getHostAvailability(Long hostId, LocalDate startDate, LocalDate endDate);
+    
+    /**
+     * 호스트 ID로 호스트 엔티티를 조회합니다.
+     * @param hostId 호스트 ID
+     * @return 호스트 엔티티
+     */
+    com.jimjim.lugeasy.user.domain.Host getHostById(Long hostId);
 }

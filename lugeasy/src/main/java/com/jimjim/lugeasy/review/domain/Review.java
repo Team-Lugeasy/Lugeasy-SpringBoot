@@ -1,5 +1,6 @@
 package com.jimjim.lugeasy.review.domain;
 
+import com.jimjim.lugeasy.common.entity.BaseEntity;
 import com.jimjim.lugeasy.match.domain.Matching;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

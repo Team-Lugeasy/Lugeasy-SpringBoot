@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/auths/refresh/accessToken").permitAll()
                         .requestMatchers("/auths/resign").authenticated()
                         .requestMatchers("/api/v1/hosts/**").authenticated()
+                        .requestMatchers("/api/v1/reviews/**").authenticated()
                         .anyRequest().denyAll());
         http
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
