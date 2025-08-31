@@ -1,9 +1,11 @@
 package com.jimjim.lugeasy.review.application.v1;
 
+import com.jimjim.lugeasy.review.application.v1.dto.ReviewRequestDTO;
 import com.jimjim.lugeasy.review.application.v1.dto.ReviewResponseDTO;
 import com.jimjim.lugeasy.review.domain.Review;
 import com.jimjim.lugeasy.review.service.ReviewService;
 import com.jimjim.lugeasy.user.domain.Host;
+import com.jimjim.lugeasy.user.domain.Member;
 import com.jimjim.lugeasy.user.service.HostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,48 @@ public class ReviewFacadeImpl implements ReviewFacade {
                 .reviewCount(reviewCount != null ? reviewCount : 0L)
                 .reviews(reviewDetails)
                 .build();
+    }
+    
+    @Override
+    @Transactional
+    public ReviewRequestDTO.CreateReviewResponse createReview(
+            Long memberId, 
+            Long matchId, 
+            String content, 
+            Integer rating) {
+        
+        // 회원 정보 조회 (User 도메인)
+        Member member = hostService.getMemberById(memberId);
+        
+        // ReviewService를 통해 리뷰 생성 (Review 도메인)
+        return reviewService.createReview(member, matchId, content, rating);
+    }
+    
+    @Override
+    @Transactional
+    public ReviewRequestDTO.UpdateReviewResponse updateReview(
+            Long reviewId, 
+            Long memberId, 
+            String content, 
+            Integer rating) {
+        
+        // ReviewService를 통해 리뷰 수정 (Review 도메인)
+        return reviewService.updateReview(reviewId, memberId, content, rating);
+    }
+    
+    @Override
+    @Transactional
+    public void deleteReview(Long reviewId, Long memberId) {
+        
+        // ReviewService를 통해 리뷰 삭제 (Review 도메인)
+        reviewService.deleteReview(reviewId, memberId);
+    }
+    
+    @Override
+    public List<ReviewRequestDTO.CreateReviewResponse> getReviewsByMemberId(Long memberId) {
+        
+        // ReviewService를 통해 회원의 리뷰 목록 조회 (Review 도메인)
+        return reviewService.getReviewsByMemberId(memberId);
     }
     
     /**

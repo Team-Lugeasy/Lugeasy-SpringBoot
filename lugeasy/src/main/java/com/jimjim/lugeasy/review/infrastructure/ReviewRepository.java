@@ -22,4 +22,15 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 특정 호스트의 리뷰 개수 조회
     @Query("SELECT COUNT(r) FROM Review r JOIN r.matching m WHERE m.host.id = :hostId")
     Long getReviewCountByHostId(@Param("hostId") Long hostId);
+    
+    /**
+     * 매칭 ID로 리뷰 존재 여부를 확인합니다.
+     */
+    boolean existsByMatchingId(Long matchingId);
+    
+    /**
+     * 회원 ID로 리뷰 목록을 조회합니다.
+     */
+    @Query("SELECT r FROM Review r JOIN FETCH r.matching m JOIN FETCH m.member WHERE m.member.id = :memberId ORDER BY r.createdAt DESC")
+    List<Review> findByMemberId(@Param("memberId") Long memberId);
 }

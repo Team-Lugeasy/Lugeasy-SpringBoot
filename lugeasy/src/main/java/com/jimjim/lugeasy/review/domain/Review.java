@@ -25,4 +25,12 @@ public class Review extends BaseEntity {
     private String content;
 
     private Integer rating;
+    
+    /**
+     * 리뷰를 수정합니다.
+     */
+    public void updateReview(String content, Integer rating) {
+        this.content = content;
+        this.rating = rating;
+    }
 }
