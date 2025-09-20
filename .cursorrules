@@ -303,6 +303,65 @@ public interface HostRepository extends JpaRepository<Host, Long> {
 7. 도메인별로 패키지를 분리하여 관심사 분리
 8. **Facade 패턴**: 여러 도메인의 서비스를 조합하는 복잡한 비즈니스 로직은 Facade에서 처리
 
+### 17. Controller 계층 규칙
+```java
+// Controller는 단순히 Facade 메서드 호출만 담당
+@RestController
+@RequestMapping("/api/v1/example")
+@RequiredArgsConstructor
+public class ExampleController {
+    
+    private final ExampleFacade exampleFacade;
+    
+    @PostMapping
+    public BaseResponse<ExampleResponse> createExample(
+            @RequestBody ExampleRequest request,
+            @AuthenticationMember Long memberId) {
+        
+        // Controller에서는 단순히 Facade 호출만
+        return BaseResponse.onSuccess(exampleFacade.createExample(request, memberId));
+    }
+}
+```
+
+#### Controller 계층 금지사항:
+- ❌ 비즈니스 로직 구현
+- ❌ 데이터 변환 로직
+- ❌ 권한 확인 로직
+- ❌ 복잡한 조건문이나 반복문
+- ❌ 여러 서비스 직접 호출
+
+#### Controller 계층 허용사항:
+- ✅ Facade 메서드 호출
+- ✅ Request/Response 매핑
+- ✅ Swagger 어노테이션
+- ✅ 인증 정보 주입 (@AuthenticationMember)
+
+### 18. @AuthenticationMember 사용 규칙
+```java
+// ✅ 올바른 사용법: Member 객체를 받아서 ID 추출
+@GetMapping
+public BaseResponse<ExampleResponse> getExample(
+        @AuthenticationMember Member member) {
+    
+    return BaseResponse.onSuccess(exampleFacade.getExample(member.getId()));
+}
+
+// ❌ 잘못된 사용법: Long memberId 직접 사용
+@GetMapping
+public BaseResponse<ExampleResponse> getExample(
+        @AuthenticationMember Long memberId) {  // null 반환됨
+    
+    return BaseResponse.onSuccess(exampleFacade.getExample(memberId));
+}
+```
+
+#### @AuthenticationMember 규칙:
+- **반드시 `Member` 객체로 받기**: `@AuthenticationMember Member member`
+- **ID 추출**: `member.getId()`로 memberId 사용
+- **null 체크 불필요**: 인증된 사용자만 접근 가능한 API에서 사용
+- **일관성 유지**: 모든 Controller에서 동일한 패턴 사용
+
 ## 코드 작성 시 준수사항
 - 기존 코드 스타일과 일관성 유지
 - 한국어 주석 사용 (비즈니스 로직 설명)

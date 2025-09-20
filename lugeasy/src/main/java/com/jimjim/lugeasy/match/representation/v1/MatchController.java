@@ -79,7 +79,7 @@ public class MatchController {
         return BaseResponse.onSuccess(response);
     }
 
-    @Operation(summary = "매칭 목록 조회", description = "회원의 매칭 목록을 조회합니다.")
+    @Operation(summary = "매칭 목록 조회 (통합)", description = "사용자의 모든 매칭 목록을 조회합니다 (호스트/회원 모두 포함).")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "매칭 목록 조회 성공",
             content = @Content(mediaType = "application/json",
@@ -96,9 +96,12 @@ public class MatchController {
                           "host_id": 1,
                           "host_name": "김태린",
                           "host_address": "서울시 노원구 화랑로 123",
+                          "member_id": 11,
+                          "member_name": "일반사용자1",
                           "drop_off_time": "2024-03-26T11:00:00",
                           "finding_time": "2024-03-28T23:00:00",
                           "status": "REQUESTED",
+                          "user_role": "HOST",
                           "created_at": "2024-03-25T10:00:00"
                         }
                       ]
@@ -110,6 +113,48 @@ public class MatchController {
     })
     @GetMapping
     public BaseResponse<List<MatchRequestDTO.MatchDetail>> getMatches(
+            @AuthenticationMember Member member) {
+        
+        List<MatchRequestDTO.MatchDetail> matches = 
+                matchFacade.getMatchesByUserId(member.getId());
+        
+        return BaseResponse.onSuccess(matches);
+    }
+    
+    @Operation(summary = "회원 매칭 목록 조회", description = "회원으로 참여한 매칭 목록만 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "회원 매칭 목록 조회 성공",
+            content = @Content(mediaType = "application/json",
+                examples = @ExampleObject(
+                    name = "회원 매칭 목록 조회 성공 응답",
+                    value = """
+                    {
+                      "timestamp": "2025-08-31T09:45:40.426159645Z",
+                      "code": "COMMON200",
+                      "message": "요청에 성공하였습니다.",
+                      "result": [
+                        {
+                          "match_id": 1,
+                          "host_id": 1,
+                          "host_name": "김태린",
+                          "host_address": "서울시 노원구 화랑로 123",
+                          "member_id": 11,
+                          "member_name": "일반사용자1",
+                          "drop_off_time": "2024-03-26T11:00:00",
+                          "finding_time": "2024-03-28T23:00:00",
+                          "status": "REQUESTED",
+                          "user_role": "MEMBER",
+                          "created_at": "2024-03-25T10:00:00"
+                        }
+                      ]
+                    }
+                    """
+                )
+            )
+        )
+    })
+    @GetMapping("/as-member")
+    public BaseResponse<List<MatchRequestDTO.MatchDetail>> getMatchesAsMember(
             @AuthenticationMember Member member) {
         
         List<MatchRequestDTO.MatchDetail> matches = 
@@ -134,9 +179,12 @@ public class MatchController {
                         "host_id": 1,
                         "host_name": "김태린",
                         "host_address": "서울시 노원구 화랑로 123",
+                        "member_id": 11,
+                        "member_name": "일반사용자1",
                         "drop_off_time": "2024-03-26T11:00:00",
                         "finding_time": "2024-03-28T23:00:00",
                         "status": "REQUESTED",
+                        "user_role": "HOST",
                         "created_at": "2024-03-25T10:00:00"
                       }
                     }
@@ -181,5 +229,59 @@ public class MatchController {
         matchFacade.cancelMatch(matchId, member.getId());
         
         return BaseResponse.onSuccess(null);
+    }
+    
+    @Operation(summary = "매칭 상태 변경", description = "호스트가 매칭 상태를 변경합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "매칭 상태 변경 성공",
+            content = @Content(mediaType = "application/json",
+                examples = @ExampleObject(
+                    name = "매칭 상태 변경 성공 응답",
+                    value = """
+                    {
+                      "timestamp": "2025-08-31T09:45:40.426159645Z",
+                      "code": "COMMON200",
+                      "message": "요청에 성공하였습니다.",
+                      "result": {
+                        "match_id": 1,
+                        "host_id": 1,
+                        "host_name": "김태린",
+                        "host_address": "서울시 노원구 화랑로 123",
+                        "drop_off_time": "2024-03-26T11:00:00",
+                        "finding_time": "2024-03-28T23:00:00",
+                        "status": "MATCHED",
+                        "created_at": "2024-03-25T10:00:00"
+                      }
+                    }
+                    """
+                )
+            )
+        )
+    })
+    @PatchMapping("/{matchId}/status")
+    public BaseResponse<MatchRequestDTO.MatchDetail> updateMatchingStatus(
+            @AuthenticationMember Member member,
+            @Parameter(description = "매칭 ID", example = "1") @PathVariable Long matchId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "매칭 상태 변경",
+                required = true,
+                content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(
+                        name = "매칭 상태 변경 예시",
+                        value = """
+                        {
+                          "status": "MATCHED"
+                        }
+                        """
+                    )
+                )
+            )
+            @RequestBody MatchRequestDTO.UpdateMatchingStatusRequest request) {
+        
+        return BaseResponse.onSuccess(matchFacade.updateMatchingStatus(
+            matchId, 
+            request.getStatus(), 
+            member.getId()));
     }
 }

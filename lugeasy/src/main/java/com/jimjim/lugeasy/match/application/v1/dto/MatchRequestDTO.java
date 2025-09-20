@@ -64,6 +64,12 @@ public class MatchRequestDTO {
         @Schema(description = "호스트 주소")
         private String hostAddress;
 
+        @Schema(description = "회원 ID")
+        private Long memberId;
+
+        @Schema(description = "회원 이름")
+        private String memberName;
+
         @Schema(description = "짐 맡기기 시간")
         private LocalDateTime dropOffTime;
 
@@ -73,7 +79,21 @@ public class MatchRequestDTO {
         @Schema(description = "매칭 상태")
         private String status;
 
+        @Schema(description = "사용자 역할 (HOST/MEMBER)")
+        private String userRole;
+
         @Schema(description = "매칭 생성 시간")
         private LocalDateTime createdAt;
+    }
+    
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "매칭 상태 변경 요청 DTO")
+    public static class UpdateMatchingStatusRequest {
+        @Schema(description = "새로운 매칭 상태", example = "MATCHED", required = true)
+        @NotNull(message = "매칭 상태는 필수입니다")
+        private String status;
     }
 }

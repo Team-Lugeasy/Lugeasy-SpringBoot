@@ -37,7 +37,12 @@ public class Matching extends BaseEntity {
 
     // host에 address가 있는데 주소/위도/경도 표시해야 하나?
 
-
-
-
+    /**
+     * 매칭 상태를 변경합니다.
+     * 
+     * @param newStatus 새로운 매칭 상태
+     */
+    public void updateMatchingStatus(MatchingStatus newStatus) {
+        this.matchingStatus = newStatus;
+    }
 }
