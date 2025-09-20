@@ -191,9 +191,67 @@ public class MatchServiceImpl implements MatchService {
             throw new RestApiException(MatchErrorCode.MATCH_NOT_OWNED);
         }
         
+        // 상태 전환 검증
+        validateStatusTransition(matching.getMatchingStatus(), newStatus, matching);
+        
         // 매칭 상태 변경
         matching.updateMatchingStatus(newStatus);
         
         return matchingRepository.save(matching);
+    }
+    
+    @Override
+    public void validateStatusTransition(MatchingStatus currentStatus, MatchingStatus newStatus, Matching matching) {
+        // 1. 기본 상태 전환 규칙 검증
+        if (!isValidTransition(currentStatus, newStatus)) {
+            throw new RestApiException(MatchErrorCode.INVALID_STATUS_TRANSITION);
+        }
+        
+        // 2. 최종 상태에서 변경 불가 검증
+        if (isFinalStatus(currentStatus)) {
+            throw new RestApiException(MatchErrorCode.CANNOT_MODIFY_FINAL_STATUS);
+        }
+        
+        // 3. 시간 기반 제약 검증
+        validateTimeBasedConstraints(currentStatus, newStatus, matching);
+    }
+    
+    /**
+     * 유효한 상태 전환인지 확인합니다.
+     */
+    private boolean isValidTransition(MatchingStatus current, MatchingStatus next) {
+        return switch (current) {
+            case REQUESTED -> next == MatchingStatus.MATCHED || next == MatchingStatus.REJECTED;
+            case MATCHED -> next == MatchingStatus.COMPLETED || next == MatchingStatus.REJECTED;
+            case COMPLETED, REJECTED -> false; // 최종 상태
+        };
+    }
+    
+    /**
+     * 최종 상태인지 확인합니다.
+     */
+    private boolean isFinalStatus(MatchingStatus status) {
+        return status == MatchingStatus.COMPLETED || status == MatchingStatus.REJECTED;
+    }
+    
+    /**
+     * 시간 기반 제약을 검증합니다.
+     */
+    private void validateTimeBasedConstraints(MatchingStatus currentStatus, MatchingStatus newStatus, Matching matching) {
+        LocalDateTime now = LocalDateTime.now();
+        
+        // MATCHED → REJECTED: 서비스 시작 전에만 가능
+        if (currentStatus == MatchingStatus.MATCHED && newStatus == MatchingStatus.REJECTED) {
+            if (now.isAfter(matching.getDropOffTime())) {
+                throw new RestApiException(MatchErrorCode.CANNOT_CANCEL_AFTER_SERVICE_START);
+            }
+        }
+        
+        // MATCHED → COMPLETED: 서비스 종료 후에만 가능
+        if (currentStatus == MatchingStatus.MATCHED && newStatus == MatchingStatus.COMPLETED) {
+            if (now.isBefore(matching.getFindingTime())) {
+                throw new RestApiException(MatchErrorCode.CANNOT_COMPLETE_BEFORE_SERVICE_END);
+            }
+        }
     }
 }

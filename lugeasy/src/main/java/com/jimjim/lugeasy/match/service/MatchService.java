@@ -73,4 +73,15 @@ public interface MatchService {
      * @return 변경된 매칭 정보
      */
     Matching updateMatchingStatus(Long matchId, com.jimjim.lugeasy.match.domain.MatchingStatus newStatus, Long memberId);
+    
+    /**
+     * 매칭 상태 변경 가능 여부를 검증합니다.
+     * 
+     * @param currentStatus 현재 상태
+     * @param newStatus 새로운 상태
+     * @param matching 매칭 정보
+     */
+    void validateStatusTransition(com.jimjim.lugeasy.match.domain.MatchingStatus currentStatus, 
+                                 com.jimjim.lugeasy.match.domain.MatchingStatus newStatus, 
+                                 Matching matching);
 }
