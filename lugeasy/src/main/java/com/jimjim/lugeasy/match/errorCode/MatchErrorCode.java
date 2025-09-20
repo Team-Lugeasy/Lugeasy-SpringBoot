@@ -16,6 +16,7 @@ public enum MatchErrorCode implements ErrorCodeInterface {
     MATCH_CANNOT_CANCEL("MATCH004", "취소할 수 없는 매칭 상태입니다.", HttpStatus.BAD_REQUEST),
     HOST_NOT_FOUND("MATCH005", "호스트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INVALID_TIME_RANGE("MATCH006", "짐 맡기기 시간은 짐 찾기 시간보다 이전이어야 합니다.", HttpStatus.BAD_REQUEST),
+    MATCH_STATUS_UPDATE_FAILED("MATCH007", "매칭 상태 변경 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     private final String code;

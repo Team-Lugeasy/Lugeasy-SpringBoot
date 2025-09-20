@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/hosts/**").authenticated()
                         .requestMatchers("/api/v1/reviews/**").authenticated()
                         .requestMatchers("/api/v1/matches/**").authenticated()
+                        .requestMatchers("/api/v1/notifications/**").authenticated()
                         .anyRequest().denyAll());
         http
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
