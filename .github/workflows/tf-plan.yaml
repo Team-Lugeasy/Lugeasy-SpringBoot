@@ -14,7 +14,7 @@ env:
   TF_WORKDIR: "infra"
 
 jobs:
-  plan:
+  terraform-plan:
     runs-on: ubuntu-latest
 
     steps:
@@ -50,5 +50,4 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
           set -e
-          terraform plan -no-color -input=false -out=tfplan.bin
-          terraform show -no-color tfplan.bin > plan_output.txt
+          terraform plan -no-color -input=false
