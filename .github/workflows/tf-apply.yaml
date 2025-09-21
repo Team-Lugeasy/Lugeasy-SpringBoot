@@ -11,7 +11,7 @@ env:
   TF_WORKDIR: "infra"
 
 jobs:
-  plan:
+  terraform-apply:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,4 +44,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ${{ env.TF_WORKDIR }}
-        run: terraform apply -input=false -auto-approve tfplan.bin
+        run: terraform apply -input=false
