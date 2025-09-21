@@ -1,0 +1,54 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches-ignore: [dev]
+  push:
+    branches-ignore: [dev]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  TF_WORKDIR: "infra"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Configure AWS Credentials (Access Keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-3
+
+      - name: Terraform fmt
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          set -e
+          terraform plan -no-color -input=false -out=tfplan.bin
+          terraform show -no-color tfplan.bin > plan_output.txt
