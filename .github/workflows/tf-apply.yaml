@@ -1,14 +1,11 @@
-name: Terraform Plan (exclude dev)
+name: Terraform Apply (on dev push)
 
 on:
-  pull_request:
-    branches-ignore: [dev]
   push:
-    branches-ignore: [dev]
+    branches: [dev]
 
 permissions:
   contents: read
-  pull-requests: write
 
 env:
   TF_WORKDIR: "infra"
@@ -45,14 +42,6 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform validate
 
-      - name: Terraform Plan
-        id: plan
+      - name: Terraform Apply (auto-approve)
         working-directory: ${{ env.TF_WORKDIR }}
-        run: |
-          set -e
-          terraform plan -no-color -input=false -out=tfplan.bin
-          terraform show -no-color tfplan.bin > plan_output.txt
-
-      - name: Fail if plan step failed
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+        run: terraform apply -input=false -auto-approve tfplan.bin
