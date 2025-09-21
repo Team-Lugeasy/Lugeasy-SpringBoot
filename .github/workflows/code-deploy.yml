@@ -68,6 +68,10 @@ jobs:
           chmod 600 ec2_key.pem
 
       - name: Deploy to EC2 and run container
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: lugeasy/server
+          IMAGE_TAG: ${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@api.lugeasy.com << 'EOF'
           set -euo pipefail
