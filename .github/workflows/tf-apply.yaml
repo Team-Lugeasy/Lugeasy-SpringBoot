@@ -1,4 +1,4 @@
-name: Terraform Apply (on dev push)
+name: Terraform Apply
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-3
 
-      - name: Terraform fmt (check)
+      - name: Terraform fmt
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform fmt -check -recursive
 
@@ -42,6 +42,6 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform validate
 
-      - name: Terraform Apply (auto-approve)
+      - name: Terraform Apply
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform apply -input=false -auto-approve tfplan.bin

@@ -1,4 +1,4 @@
-name: Terraform Plan (exclude dev)
+name: Terraform Plan
 
 on:
   pull_request:
@@ -33,7 +33,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-3
 
-      - name: Terraform fmt (check)
+      - name: Terraform fmt
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform fmt -check -recursive
 
@@ -52,7 +52,3 @@ jobs:
           set -e
           terraform plan -no-color -input=false -out=tfplan.bin
           terraform show -no-color tfplan.bin > plan_output.txt
-
-      - name: Fail if plan step failed
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
