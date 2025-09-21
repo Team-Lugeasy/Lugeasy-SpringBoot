@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 env:
-  TF_WORKDIR: "../../infra"
+  TF_WORKDIR: "infra"
 
 jobs:
   plan:
