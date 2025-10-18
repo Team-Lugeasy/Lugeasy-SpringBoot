@@ -1,6 +1,6 @@
 data "aws_ami" "al2023" {
   most_recent = true
-  owners      = ["137112412989"] # Amazon
+  owners      = ["137112412989"]
 
   filter {
     name   = "name"
@@ -25,22 +25,4 @@ resource "aws_instance" "lugeasy_ec2" {
   tags = {
     Name = "lugeasy"
   }
-
-  metadata_options {
-    http_tokens = "required"
-  }
-
-  root_block_device {
-    volume_size           = 16
-    volume_type           = "gp3"
-    delete_on_termination = true
-  }
-
-  # (옵션) 초기 스크립트
-  user_data = <<-EOT
-    #!/bin/bash
-    set -eux
-    dnf update -y
-    echo "lugeasy instance is up" > /etc/motd
-  EOT
 }
