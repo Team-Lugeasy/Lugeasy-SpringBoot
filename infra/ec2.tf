@@ -18,7 +18,7 @@ resource "aws_instance" "lugeasy_ec2" {
   instance_type          = "t2.micro"
   subnet_id              = "subnet-08970d55b3403bf2b"
   vpc_security_group_ids = [aws_security_group.lugeasy_security_group.id]
-  key_name               = aws_key_pair.lugeasy_key_pair.name
+  key_name               = aws_key_pair.lugeasy_key_pair.key_name
 
   associate_public_ip_address = true
 
