@@ -43,5 +43,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
+        env: 
+          TF_VAR_lugeasy_ssh_key: ${{ secrets.EC2_SSH_KEY }}
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform plan -input=false
