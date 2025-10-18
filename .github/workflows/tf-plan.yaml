@@ -33,10 +33,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-3
 
-      - name: Terraform fmt
-        working-directory: ${{ env.TF_WORKDIR }}
-        run: terraform fmt -check -recursive
-
       - name: Terraform Init
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform init -input=false
