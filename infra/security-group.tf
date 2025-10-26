@@ -1,7 +1,7 @@
 resource "aws_security_group" "lugeasy_security_group" {
   name        = "lugeasy-security-group"
   description = "lugeasy security group"
-  vpc_id      = "vpc-0d9faf2a4f2631b63" 
+  vpc_id      = "vpc-0f4129e666e1fe560" 
 }
 
 # ingress rule
