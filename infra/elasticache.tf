@@ -6,26 +6,14 @@ data "aws_vpc" "this" {
   id = local.vpc_id
 }
 
-variable "redis_subnet_ids" {
-  type        = list(string)
-  description = "ElastiCache가 올라갈 서브넷 IDs (같은 VPC 내)"
-}
-
-# 앱 서버 SG ID (알고 있으면 넣어줘. 모르면 빈 문자열 유지)
-variable "app_sg_id" {
-  type        = string
-  default     = ""
-  description = "Redis에 접속할 애플리케이션의 Security Group ID"
-}
-
 resource "aws_elasticache_subnet_group" "redis" {
   name        = "redis-subnet-group"
   description = "Subnets for Redis"
   subnet_ids  = ["subnet-077252355d1d43013"]
 }
 
-resource "aws_security_group" "redis" {
-  name        = "sg-redis"
+resource "aws_security_group" "lugeasy_redis_sg" {
+  name        = "lugeasy-redis-sg"
   description = "Allow Redis 6379"
   vpc_id      = data.aws_vpc.this.id
   tags        = { Name = "sg-redis" }
