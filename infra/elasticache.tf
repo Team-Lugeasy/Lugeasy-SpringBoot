@@ -71,7 +71,7 @@ resource "aws_elasticache_cluster" "lugeasy_redis" {
   apply_immediately = true
 
   subnet_group_name  = aws_elasticache_subnet_group.redis.name
-  security_group_ids = [aws_security_group.redis.id]
+  security_group_ids = [aws_security_group.lugeasy_redis_sg.id]
 }
 
 output "redis_endpoint" {
