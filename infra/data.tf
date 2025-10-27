@@ -1,11 +1,23 @@
-resource "aws_vpc" "lugeasy_vpc" {}
+data "aws_vpc" "lugeasy_vpc" {
+    id = "vpc-010ae6b4cbc4493ca"
+}
 
-resource "aws_internet_gateway" "lugeasy_internet_gateway" {}
+data "aws_internet_gateway" "lugeasy_internet_gateway" {
+    id = "igw-0024cce84865cc19c"
+}
 
-resource "aws_route_table" "lugeasy_public_route_table" {}
+data "aws_route_table" "lugeasy_public_route_table" {
+    id = "rtb-0fb5627e2f2982d56"
+}
 
-resource "aws_route_table" "lugeasy_private_route_table" {}
+data "aws_route_table" "lugeasy_private_route_table" {
+    id = "rtb-0edf0de8396b515f7"
+}
 
-resource "aws_subnet" "lugeasy_public_subnet" {}
+data "aws_subnet" "lugeasy_public_subnet" {
+    id = "subnet-03c09bf8b674e323e"
+}
 
-resource "aws_subnet" "lugeasy_private_subnet" {}
+data "aws_subnet" "lugeasy_private_subnet" {
+    id = "subnet-0b828c2949ebf9f57"
+}
