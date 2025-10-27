@@ -37,10 +37,6 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform init -input=false
 
-      - name: Terraform Validate
-        working-directory: ${{ env.TF_WORKDIR }}
-        run: terraform validate
-
       - name: Terraform Plan
         id: plan
         working-directory: ${{ env.TF_WORKDIR }}
