@@ -1,5 +1,6 @@
 data "aws_vpc" "lugeasy_vpc" {
     id = "vpc-010ae6b4cbc4493ca"
+    cidr_block = "10.0.0.0/24"
 }
 
 data "aws_internet_gateway" "lugeasy_internet_gateway" {

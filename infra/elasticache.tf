@@ -1,13 +1,13 @@
 resource "aws_elasticache_subnet_group" "redis" {
   name        = "redis-subnet-group"
   description = "Private subnet for Redis"
-  subnet_ids  = [aws_subnet.lugeasy_private_subnet.id]
+  subnet_ids  = [data.aws_subnet.lugeasy_private_subnet.id]
 }
 
 resource "aws_security_group" "lugeasy_redis_sg" {
   name        = "lugeasy-redis-sg"
   description = "Allow Redis 6379"
-  vpc_id      = aws_vpc.lugeasy_vpc.id
+  vpc_id      = data.aws_vpc.lugeasy_vpc.id
 }
 
 resource "aws_security_group_rule" "redis_from_app" {
@@ -26,7 +26,7 @@ resource "aws_security_group_rule" "redis_from_vpc" {
   to_port           = 6379
   protocol          = "tcp"
   security_group_id = aws_security_group.lugeasy_redis_sg.id
-  cidr_blocks       = [aws_vpc.lugeasy_vpc.cidr_block]
+  cidr_blocks       = [data.aws_vpc.lugeasy_vpc.cidr_block]
   description       = "TEMP: Allow 6379 from VPC CIDR"
 }
 
