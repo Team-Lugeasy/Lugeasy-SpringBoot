@@ -50,7 +50,7 @@ resource "aws_lb" "lugeasy_alb" {
 
 resource "aws_lb_target_group" "lugeasy_tg" {
   name        = "lugeasy-tg"
-  port        = 8000               
+  port        = 8080               
   protocol    = "HTTP"
   target_type = "instance"
   vpc_id      = data.aws_vpc.lugeasy_vpc.id
@@ -73,7 +73,7 @@ resource "aws_lb_target_group" "lugeasy_tg" {
 resource "aws_lb_target_group_attachment" "lugeasy_tg_attach_ec2" {
   target_group_arn = aws_lb_target_group.lugeasy_tg.arn
   target_id        = aws_instance.lugeasy_ec2.id
-  port             = 8000          
+  port             = 8080
 }
 
 resource "aws_lb_listener" "http_80_redirect_to_https" {
