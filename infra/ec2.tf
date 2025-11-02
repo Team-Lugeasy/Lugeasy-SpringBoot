@@ -1,7 +1,54 @@
+data "aws_ami" "al2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-kernel-6.1-*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
+resource "aws_instance" "lugeasy_ec2" {
+  ami                         = data.aws_ami.al2023.id
+  instance_type               = "t3.micro"
+  subnet_id                   = data.aws_subnet.lugeasy_public_subnet_a.id
+  vpc_security_group_ids      = [aws_security_group.lugeasy_ec2_security_group.id]
+  associate_public_ip_address = true
+
+  user_data                  = file("${path.module}/nginx.sh")
+  user_data_replace_on_change = true
+
+  tags = {
+    Name = "lugeasy-ec2"
+  }
+}
+
+resource "aws_eip" "lugeasy_ec2_eip" {
+  domain = "vpc"               
+  tags = {
+    Name = "lugeasy-ec2-eip"
+  }
+}
+
+resource "aws_eip_association" "lugeasy_ec2_assoc" {
+  allocation_id = aws_eip.lugeasy_ec2_eip.id
+  instance_id   = aws_instance.lugeasy_ec2.id
+}
+
+
 resource "aws_security_group" "lugeasy_ec2_security_group" {
   name        = "lugeasy-ec2-security-group"
   description = "lugeasy ec2 security group"
   vpc_id      =  data.aws_vpc.lugeasy_vpc.id
+
+  tags = {
+    Name = "lugeasy-ec2-sg"
+  }
 }
 
 # ingress rule
