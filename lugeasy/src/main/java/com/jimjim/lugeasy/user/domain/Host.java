@@ -4,6 +4,7 @@ import com.jimjim.lugeasy.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -31,10 +32,15 @@ public class Host extends BaseEntity {
 
     private String introduce;
 
+    private Double latitude;
+
+    private Double longitude;
+
     @ColumnDefault("false")
     private Boolean isAuthentication;
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<HostTime> availableTimes = new ArrayList<>();
 
 }

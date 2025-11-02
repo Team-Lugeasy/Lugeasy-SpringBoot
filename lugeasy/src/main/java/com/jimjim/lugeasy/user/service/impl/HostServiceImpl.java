@@ -20,7 +20,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -38,6 +37,11 @@ public class HostServiceImpl implements HostService {
         // 인증된 호스트들을 멤버 정보와 함께 조회
         List<Host> authenticatedHosts = hostRepository.findAuthenticatedHostsWithMember();
         
+        // log
+        System.out.println(authenticatedHosts.get(0).getLatitude());
+        System.out.println(authenticatedHosts.get(0).getLongitude());
+
+        
         return authenticatedHosts.stream()
                 .map(this::convertToHostListResponseDTO)
                 .collect(Collectors.toList());
@@ -49,13 +53,19 @@ public class HostServiceImpl implements HostService {
         
         // 호스트의 리뷰 개수 조회
         Long reviewCount = reviewRepository.getReviewCountByHostId(host.getId());
+
+        // log
+        System.out.println(host.getLatitude());
+        System.out.println(host.getLongitude());
         
         return HostListResponseDTO.builder()
                 .id(host.getId())
                 .name(host.getMember().getName())
-                .averageRating(averageRating != null ? averageRating : 0.0)
+                .reviewRate(averageRating != null ? averageRating : 0.0)
                 .reviewCount(reviewCount != null ? reviewCount : 0L)
                 .address(host.getAddress())
+                .latitude(host.getLatitude())
+                .longitude(host.getLongitude())
                 .build();
     }
     
