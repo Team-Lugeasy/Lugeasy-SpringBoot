@@ -64,6 +64,9 @@ public class MatchRequestDTO {
         @Schema(description = "호스트 주소")
         private String hostAddress;
 
+        @Schema(description = "호스트 프로필 이미지")
+        private String hostProfileImg;
+
         @Schema(description = "회원 ID")
         private Long memberId;
 
