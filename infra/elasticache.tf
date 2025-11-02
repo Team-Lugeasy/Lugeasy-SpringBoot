@@ -16,7 +16,7 @@ resource "aws_security_group_rule" "redis_from_app" {
   to_port                  = 6379
   protocol                 = "tcp"
   security_group_id        = aws_security_group.lugeasy_redis_sg.id
-  source_security_group_id = aws_security_group.lugeasy_security_group.id
+  source_security_group_id = aws_security_group.lugeasy_ec2_security_group.id
   description              = "Allow 6379 from ec2 SG"
 }
 
