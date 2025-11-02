@@ -50,7 +50,7 @@ resource "aws_lb" "lugeasy_alb" {
 
 resource "aws_lb_target_group" "lugeasy_tg" {
   name        = "lugeasy-tg"
-  port        = 80
+  port        = 8000               
   protocol    = "HTTP"
   target_type = "instance"
   vpc_id      = data.aws_vpc.lugeasy_vpc.id
@@ -58,7 +58,7 @@ resource "aws_lb_target_group" "lugeasy_tg" {
   health_check {
     enabled             = true
     protocol            = "HTTP"
-    path                = "/"
+    path                = "/"     
     matcher             = "200-399"
     interval            = 30
     timeout             = 5
@@ -69,12 +69,12 @@ resource "aws_lb_target_group" "lugeasy_tg" {
   tags = { Name = "lugeasy-tg" }
 }
 
+
 resource "aws_lb_target_group_attachment" "lugeasy_tg_attach_ec2" {
   target_group_arn = aws_lb_target_group.lugeasy_tg.arn
   target_id        = aws_instance.lugeasy_ec2.id
-  port             = 80
+  port             = 8000          
 }
-
 
 resource "aws_lb_listener" "http_80_redirect_to_https" {
   load_balancer_arn = aws_lb.lugeasy_alb.arn
