@@ -1,11 +1,9 @@
 #!/bin/bash
 set -euxo pipefail
 
-# 패키지 업데이트 & NGINX 설치
 dnf -y update
 dnf -y install nginx
 
-# 기본 문서 생성
 cat >/usr/share/nginx/html/index.html <<'HTML'
 <!doctype html>
 <html>
@@ -18,12 +16,9 @@ cat >/usr/share/nginx/html/index.html <<'HTML'
 </html>
 HTML
 
-# 권한 정리 (403 방지)
 chown -R nginx:nginx /usr/share/nginx/html || true
 chmod -R a+rX /usr/share/nginx/html
 
-# 기본 서버블록: 어떤 Host 헤더로 와도 200 응답
-# /health 엔드포인트 추가(헬스체크 용)
 rm -f /etc/nginx/conf.d/default.conf || true
 cat >/etc/nginx/conf.d/lugeasy.conf <<'NGINX'
 server {
