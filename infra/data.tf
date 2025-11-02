@@ -40,3 +40,8 @@ data "aws_subnet" "lugeasy_private_subnet" {
     values = [data.aws_vpc.lugeasy_vpc.id]
   }
 }
+
+data "aws_key_pair" "lugeasy" {
+  key_name = "lugeasy-server-key-pair"
+}
+

@@ -23,6 +23,8 @@ resource "aws_instance" "lugeasy_ec2" {
   user_data                  = file("${path.module}/nginx.sh")
   user_data_replace_on_change = true
 
+  key_name = data.aws_key_pair.lugeasy.key_name
+
   tags = {
     Name = "lugeasy-ec2"
   }
@@ -60,21 +62,30 @@ resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_22_ingress_rule" {
   to_port           = 22
 }
 
-resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_80_ingress_rule" {
-  security_group_id = aws_security_group.lugeasy_ec2_security_group.id
-  cidr_ipv4         =  "0.0.0.0/0"
-  from_port         = 80
-  ip_protocol       = "tcp"
-  to_port           = 80
+resource "aws_vpc_security_group_ingress_rule" "ec2_allow_8080_from_alb" {
+  security_group_id            = aws_security_group.lugeasy_ec2_security_group.id
+  ip_protocol                  = "tcp"
+  from_port                    = 8080
+  to_port                      = 8080
+  referenced_security_group_id = aws_security_group.lugeasy_alb_sg.id
+  description                  = "Allow HTTP 8080 only from ALB SG"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_443_ingress_rule" {
-  security_group_id = aws_security_group.lugeasy_ec2_security_group.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  ip_protocol       = "tcp"
-  to_port           = 443
-}
+# resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_80_ingress_rule" {
+#   security_group_id = aws_security_group.lugeasy_ec2_security_group.id
+#   cidr_ipv4         =  "0.0.0.0/0"
+#   from_port         = 80
+#   ip_protocol       = "tcp"
+#   to_port           = 80
+# }
+
+# resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_443_ingress_rule" {
+#   security_group_id = aws_security_group.lugeasy_ec2_security_group.id
+#   cidr_ipv4         = "0.0.0.0/0"
+#   from_port         = 443
+#   ip_protocol       = "tcp"
+#   to_port           = 443
+# }
 
 # egress rule
 resource "aws_security_group_rule" "lugeasy_ec2_any_open_egress_rule" {
