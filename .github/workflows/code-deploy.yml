@@ -109,7 +109,7 @@ jobs:
             && format('{0}-{1}', github.event.workflow_run.head_branch, github.event.workflow_run.head_sha)
             || inputs.image_tag }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@api.lugeasy.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@16.209.13.92 << 'EOF'
           set -euo pipefail
           echo "==> ECR 로그인"
           aws ecr get-login-password --region ap-northeast-3 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
