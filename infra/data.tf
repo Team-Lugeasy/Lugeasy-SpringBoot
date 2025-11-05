@@ -1,12 +1,47 @@
 data "aws_vpc" "lugeasy_vpc" {
-    id = "vpc-010ae6b4cbc4493ca"
-    cidr_block = "10.0.0.0/24"
+  filter {
+    name   = "tag:Name"
+    values = ["lugeasy-vpc"]
+  }
 }
 
-data "aws_subnet" "lugeasy_public_subnet" {
-    id = "subnet-03c09bf8b674e323e"
+data "aws_subnet" "lugeasy_public_subnet_a" {
+  filter {
+    name   = "tag:Name"
+    values = ["lugeasy-public-subnet-a"]
+  }
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.lugeasy_vpc.id]
+  }
+}
+
+data "aws_subnet" "lugeasy_public_subnet_c" {
+  filter {
+    name   = "tag:Name"
+    values = ["lugeasy-public-subnet-c"]
+  }
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.lugeasy_vpc.id]
+  }
 }
 
 data "aws_subnet" "lugeasy_private_subnet" {
-    id = "subnet-0b828c2949ebf9f57"
+  filter {
+    name   = "tag:Name"
+    values = ["lugeasy-private-subnet"]
+  }
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.lugeasy_vpc.id]
+  }
 }
+
+data "aws_key_pair" "lugeasy" {
+  key_name = "lugeasy-server-key-pair"
+}
+

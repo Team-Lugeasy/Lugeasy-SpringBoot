@@ -4,10 +4,29 @@ on:
   workflow_run:
     workflows: ["Terraform Apply"]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "체크아웃 ref (브랜치/태그/커밋)"
+        required: false
+        default: "dev"
+      image_tag:
+        description: "배포할 이미지 태그 (예: dev-latest 또는 dev-<sha>)"
+        required: false
+        default: "dev-latest"
+      skip_build:
+        description: "빌드/푸시 생략하고 기존 이미지로 재배포"
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'dev' }}
+    if: >
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'dev')
+      || (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,34 +52,49 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Checkout repo (same commit as tf-apply)
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          # 자동 트리거면 Terraform Apply가 사용한 커밋을, 수동이면 입력 ref를 체크아웃
+          ref: ${{ github.event_name == 'workflow_run'
+              && github.event.workflow_run.head_sha
+              || inputs.ref }}
           token: ${{ secrets.LUGEASY_ACTIONS_TOKEN }}
           submodules: true
 
       - name: Git Submodule Update
-        run: |
-          git submodule update --remote --recursive
+        run: git submodule update --remote --recursive
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
 
+      # 수동 실행 시 skip_build=true면 빌드/푸시 스킵
       - name: Build with Gradle
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_build == 'true') }}
         working-directory: ./lugeasy
         run: |
           chmod +x gradlew
           ./gradlew clean build -x test
 
       - name: Build, tag, and push image to Amazon ECR
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_build == 'true') }}
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: lugeasy/server
-          IMAGE_TAG: ${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}
+          # 자동: dev-<head_sha>, 수동: 입력 image_tag
+          IMAGE_TAG: ${{ github.event_name == 'workflow_run'
+            && format('{0}-{1}', github.event.workflow_run.head_branch, github.event.workflow_run.head_sha)
+            || inputs.image_tag }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./lugeasy
+          # 편의 위해 'dev-latest'도 항상 같이 태깅(자동 트리거 시)
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:dev-latest
+          fi
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:dev-latest
+          fi
 
       - name: Prepare SSH key
         run: |
@@ -71,18 +105,19 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: lugeasy/server
-          IMAGE_TAG: ${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}
+          IMAGE_TAG: ${{ github.event_name == 'workflow_run'
+            && format('{0}-{1}', github.event.workflow_run.head_branch, github.event.workflow_run.head_sha)
+            || inputs.image_tag }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@api.lugeasy.com << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@16.209.13.92 << 'EOF'
           set -euo pipefail
-
           echo "==> ECR 로그인"
           aws ecr get-login-password --region ap-northeast-3 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
           echo "==> 기존 컨테이너 중지 및 삭제"
           docker ps -aq --filter "name=lugeasy-server" | xargs -r docker rm -f
 
-          echo "==> 최신 이미지 Pull 및 실행"
+          echo "==> 이미지 Pull 및 실행"
           docker pull ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
           docker run -d --name lugeasy-server --restart unless-stopped -p 8080:8080 \
             ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
