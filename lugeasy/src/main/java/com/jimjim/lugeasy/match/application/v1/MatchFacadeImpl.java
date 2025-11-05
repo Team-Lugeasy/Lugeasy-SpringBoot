@@ -100,6 +100,7 @@ public class MatchFacadeImpl implements MatchFacade {
                 .hostId(updatedMatching.getHost().getId())
                 .hostName(updatedMatching.getHost().getMember().getName())
                 .hostAddress(updatedMatching.getHost().getAddress())
+                .hostProfileImg(updatedMatching.getHost().getMember().getProfileImageUrl())
                 .memberId(updatedMatching.getMember().getId())
                 .memberName(updatedMatching.getMember().getName())
                 .dropOffTime(updatedMatching.getDropOffTime())

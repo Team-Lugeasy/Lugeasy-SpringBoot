@@ -96,6 +96,7 @@ public class MatchController {
                           "host_id": 1,
                           "host_name": "김태린",
                           "host_address": "서울시 노원구 화랑로 123",
+                          "host_profile_img": "https://example.com/profile1.jpg",
                           "member_id": 11,
                           "member_name": "일반사용자1",
                           "drop_off_time": "2024-03-26T11:00:00",
@@ -138,6 +139,7 @@ public class MatchController {
                           "host_id": 1,
                           "host_name": "김태린",
                           "host_address": "서울시 노원구 화랑로 123",
+                          "host_profile_img": "https://example.com/profile1.jpg",
                           "member_id": 11,
                           "member_name": "일반사용자1",
                           "drop_off_time": "2024-03-26T11:00:00",
@@ -179,6 +181,7 @@ public class MatchController {
                         "host_id": 1,
                         "host_name": "김태린",
                         "host_address": "서울시 노원구 화랑로 123",
+                        "host_profile_img": "https://example.com/profile1.jpg",
                         "member_id": 11,
                         "member_name": "일반사용자1",
                         "drop_off_time": "2024-03-26T11:00:00",
@@ -247,9 +250,13 @@ public class MatchController {
                         "host_id": 1,
                         "host_name": "김태린",
                         "host_address": "서울시 노원구 화랑로 123",
+                        "host_profile_img": "https://example.com/profile1.jpg",
+                        "member_id": 11,
+                        "member_name": "일반사용자1",
                         "drop_off_time": "2024-03-26T11:00:00",
                         "finding_time": "2024-03-28T23:00:00",
                         "status": "MATCHED",
+                        "user_role": "HOST",
                         "created_at": "2024-03-25T10:00:00"
                       }
                     }

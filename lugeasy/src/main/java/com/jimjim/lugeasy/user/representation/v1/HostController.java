@@ -45,9 +45,13 @@ public class HostController {
                       "message": "요청에 성공하였습니다.",
                       "result": [
                         {
-                          "host_id": 1,
-                          "name": "호스트 이름",
-                          "description": "호스트 설명"
+                          "id": 1,
+                          "name": "김태린",
+                          "review_rate": 4.5,
+                          "review_count": 10,
+                          "address": "서울시 노원구 화랑로 123",
+                          "latitude": 37.5665,
+                          "longitude": 126.9780
                         }
                       ]
                     }
