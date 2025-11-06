@@ -104,14 +104,14 @@ resource "aws_lb_listener" "https_443" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ec2_allow_80_from_alb" {
-  security_group_id            = aws_security_group.lugeasy_ec2_security_group.id
-  ip_protocol                  = "tcp"
-  from_port                    = 80
-  to_port                      = 80
-  referenced_security_group_id = aws_security_group.lugeasy_alb_sg.id
-  description                  = "Allow HTTP 80 only from ALB SG"
-}
+# resource "aws_vpc_security_group_ingress_rule" "ec2_allow_80_from_alb" {
+#   security_group_id            = aws_security_group.lugeasy_ec2_security_group.id
+#   ip_protocol                  = "tcp"
+#   from_port                    = 80
+#   to_port                      = 80
+#   referenced_security_group_id = aws_security_group.lugeasy_alb_sg.id
+#   description                  = "Allow HTTP 80 only from ALB SG"
+# }
 
 output "alb_dns_name" {
   value = aws_lb.lugeasy_alb.dns_name
