@@ -23,7 +23,7 @@ resource "aws_instance" "lugeasy_ec2" {
   user_data                  = file("${path.module}/nginx.sh")
   user_data_replace_on_change = true
 
-  key_name = data.aws_key_pair.lugeasy.key_name
+  key_name = data.aws_key_pair.lugeasy_ec2_key_pair.key_name
 
   tags = {
     Name = "lugeasy-ec2"

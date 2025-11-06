@@ -41,7 +41,7 @@ data "aws_subnet" "lugeasy_private_subnet" {
   }
 }
 
-data "aws_key_pair" "lugeasy" {
-  key_name = "lugeasy-server-key-pair"
+data "aws_key_pair" "lugeasy_ec2_key_pair" {
+  key_name = "lugeasy-ec2-key-pair"
 }
 

@@ -27,8 +27,8 @@ dnf -y install docker
 # NGINX
 
 # nginx -t
-systemctl enable nginx
-systemctl restart nginx
+# systemctl enable nginx
+# systemctl restart nginx
 
 systemctl enable --now docker
 
