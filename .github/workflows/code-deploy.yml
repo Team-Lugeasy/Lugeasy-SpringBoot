@@ -76,11 +76,27 @@ jobs:
 
       - name: Deploy to EC2 and run container
         env:
+          AWS_REGION: ${{ env.AWS_REGION }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem AWS@16.209.13.92 << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@16.209.13.92 << EOF
           set -euo pipefail
 
+          # ---- Amazon Linux: Docker & AWS CLI 설치 + 데몬 시작 ----
+          sudo dnf -y update
+          sudo dnf -y install docker awscli
+          sudo systemctl enable --now docker
+
+          # ---- AWS 자격증명 등록 (러너 시크릿 사용) ----
+          mkdir -p ~/.aws
+          aws configure set default.region "${{ env.AWS_REGION }}"
+          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
+
+          # ---- 배포용 환경변수 주입 ----
           export AWS_REGION="${{ env.AWS_REGION }}"
           export ECR_REGISTRY="${{ env.ECR_REGISTRY }}"
           export ECR_REPOSITORY="${{ env.ECR_REPOSITORY }}"
@@ -88,17 +104,17 @@ jobs:
 
           echo "==> ECR 로그인"
           aws ecr get-login-password --region "$AWS_REGION" | \
-            docker login --username AWS --password-stdin "$ECR_REGISTRY"
+            sudo docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
           echo "==> 기존 컨테이너 중지 및 삭제"
-          docker ps -aq --filter "name=lugeasy-server" | xargs -r docker rm -f
+          sudo docker ps -aq --filter "name=lugeasy-server" | xargs -r sudo docker rm -f
 
           echo "==> 최신 이미지 Pull 및 실행"
-          docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          docker run -d --name lugeasy-server --restart unless-stopped \
+          sudo docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          sudo docker run -d --name lugeasy-server --restart=unless-stopped \
             -p 8080:8080 \
             "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
           echo "==> 현재 실행 중인 컨테이너"
-          docker ps
+          sudo docker ps
           EOF
