@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
-
 dnf -y update
+sudo -y install ec2-instance-connect
 dnf -y install nginx
 dnf -y install docker
 
