@@ -80,7 +80,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@16.209.13.92 << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@16.209.13.92 << EOF
           set -euo pipefail
 
           # --- 변수 주입 (원격에서 사용) ---
