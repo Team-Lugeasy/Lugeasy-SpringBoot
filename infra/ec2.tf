@@ -71,22 +71,6 @@ resource "aws_vpc_security_group_ingress_rule" "ec2_allow_8080_from_alb" {
   description                  = "Allow HTTP 8080 only from ALB SG"
 }
 
-# resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_80_ingress_rule" {
-#   security_group_id = aws_security_group.lugeasy_ec2_security_group.id
-#   cidr_ipv4         =  "0.0.0.0/0"
-#   from_port         = 80
-#   ip_protocol       = "tcp"
-#   to_port           = 80
-# }
-
-# resource "aws_vpc_security_group_ingress_rule" "lugeasy_ec2_443_ingress_rule" {
-#   security_group_id = aws_security_group.lugeasy_ec2_security_group.id
-#   cidr_ipv4         = "0.0.0.0/0"
-#   from_port         = 443
-#   ip_protocol       = "tcp"
-#   to_port           = 443
-# }
-
 # egress rule
 resource "aws_security_group_rule" "lugeasy_ec2_any_open_egress_rule" {
   type              = "egress"

@@ -3,18 +3,7 @@ set -euxo pipefail
 
 dnf -y update
 dnf -y install nginx
-
-cat >/usr/share/nginx/html/index.html <<'HTML'
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>lugeasy-nginx</title></head>
-<body style="font-family:sans-serif">
-  <h1>NGINX is up 🚀</h1>
-  <p>Instance: $(hostname)</p>
-  <p>Time: $(date)</p>
-</body>
-</html>
-HTML
+dnf -y install docker
 
 chown -R nginx:nginx /usr/share/nginx/html || true
 chmod -R a+rX /usr/share/nginx/html
@@ -37,7 +26,15 @@ server {
 }
 NGINX
 
-# 설정 적용
 nginx -t
 systemctl enable nginx
 systemctl restart nginx
+
+systemctl enable --now docker
+
+if id -u ec2-user >/dev/null 2>&1; then
+  usermod -aG docker ec2-user || true
+fi
+if [ -n "${SUDO_USER-}" ] && [ "$SUDO_USER" != "root" ]; then
+  usermod -aG docker "$SUDO_USER" || true
+fi
